@@ -57,8 +57,13 @@ cadeia_valida = False
 def verificar_cadeira(cadeia, automato, estado_atual):
 	if len(cadeia) == 0:
 		if estado_atual in automato['estados_de_aceitacao']:
-			aux = open('resposta.txt', 'w')
-			aux.write('1')
+			aux = open('verificacao_automato.txt', 'a')
+			aux.write('1 ')
+			aux.close()
+
+		else: 
+			aux = open('verificacao_automato.txt', 'a')
+			aux.write('0 ')
 			aux.close()
 
 		return
@@ -81,48 +86,32 @@ def verificar_cadeira(cadeia, automato, estado_atual):
 
 				verificar_cadeira(cadeia_consumida, automato, transicao[2])
 
-'''
+
 for i in range(numero_de_automatos):
 	automato = automatos[i]
 
 	for cadeia in automato['cadeias']:
+		verificar_cadeira(cadeia, automato, automato['index_do_estado_inicial'])
+		aux = open('verificacao_automato.txt', 'r')
+		for linha in aux:
+			vetor = linha.split()
+			if('1' in vetor):
+				string_de_saida += '1 '
+			else :
+				string_de_saida += '0 '
 
-		if cadeia_valida:
-			string_de_saida += '1 '
-
-		else:
-			string_de_saida += '0 '
-
+		aux.close()
+		aux = open('verificacao_automato.txt', 'w')
+		aux.write('')
+		aux.close()
 
 	string_de_saida += '\n'
 
 print(string_de_saida)
-'''
-verificar_cadeira(['1', '1', '1'], {
-		'numero_de_estados': 2,
-		'numero_de_simbolos': 3,
-		'numero_de_transicoes': 4,
-		'index_do_estado_inicial': 0,
-		'numero_de_estados_de_aceitacao': 1,
-		'transicoes': [
-			['0', '1', '0'],
-			['0', '1', '1'],
-			['0', '2', '1'],
-			['1', '2', '0']
-		], 
-		'cadeias': [
-			['1'], 
-			['1', '1'], 
-			['1', '1', '1'], 
-			['1', '2', '2', '1', '1', '1', '2', '2', '1'], 
-			['2', '2', '2', '1'], 
-			['2', '1', '2', '2']
-		],
-		'estados_de_aceitacao': ['0'], 
-		'numero_de_cadeias': 6
-	}, 0)
 
-resposta = open('resposta.txt', 'r')
+
+
+resposta = open('verificacao_automato.txt', 'r')
 for linha in resposta:
 	print(linha)
 arquivo_teste.close()
