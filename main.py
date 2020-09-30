@@ -55,36 +55,44 @@ automato_travado = False
 cadeia_valida = False
 
 def verificar_cadeira(cadeia, automato, estado_atual):
-	if len(cadeia) == 0:
-		if estado_atual in automato['estados_de_aceitacao']:
-			aux = open('verificacao_automato.txt', 'a')
-			aux.write('1 ')
-			aux.close()
 
-		else: 
-			aux = open('verificacao_automato.txt', 'a')
-			aux.write('0 ')
-			aux.close()
+    if len(cadeia) == 0:
+        if str(estado_atual) in automato['estados_de_aceitacao']:
+            print('acabou e deu bom\n\n')
+            return;
+            aux = open('verificacao_automato.txt', 'a')
+            aux.write('1 ')
+            aux.close()
 
-		return
-	else:
-		simbolo_atual = cadeia[0]
 
-		for transicao in automato['transicoes']:
+        else:
+            for transicao in automato['transicoes']:
+                if int(estado_atual) == int(transicao[0]) and int(transicao[1]) == 0:
+                    automato_travado = False
+                    cadeia_consumida = cadeia.copy()
+                    verificar_cadeira(cadeia_consumida, automato, transicao[2])
+            aux = open('verificacao_automato.txt', 'a')
+            aux.write('0 ')
+            aux.close()
 
-			automato_travado = True
+        return
+    else:
+        simbolo_atual = cadeia[0]
 
-			if int(estado_atual) == int(transicao[0]) and int(simbolo_atual) == int(transicao[1]):
-				automato_travado = False
-				cadeia_consumida = cadeia.copy()
-				cadeia_consumida.pop(0)
-				verificar_cadeira(cadeia_consumida, automato, transicao[2])
+        for transicao in automato['transicoes']:
 
-			if int(estado_atual) == int(transicao[0]) and int(transicao[1]) == 0:
-				automato_travado = False
-				cadeia_consumida = cadeia.copy()
+            automato_travado = True
 
-				verificar_cadeira(cadeia_consumida, automato, transicao[2])
+            if int(estado_atual) == int(transicao[0]) and int(simbolo_atual) == int(transicao[1]):
+                automato_travado = False
+                cadeia_consumida = cadeia.copy()
+                cadeia_consumida.pop(0)
+                verificar_cadeira(cadeia_consumida, automato, transicao[2])
+
+            if int(estado_atual) == int(transicao[0]) and int(transicao[1]) == 0:
+                automato_travado = False
+                cadeia_consumida = cadeia.copy()
+                verificar_cadeira(cadeia_consumida, automato, transicao[2])
 
 
 for i in range(numero_de_automatos):
@@ -111,9 +119,12 @@ print(string_de_saida)
 
 
 
+'''
 resposta = open('verificacao_automato.txt', 'r')
 for linha in resposta:
 	print(linha)
+'''
+
 arquivo_teste.close()
 
 '''
