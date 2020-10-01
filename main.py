@@ -1,7 +1,7 @@
 import sys
 
-arquivo_teste = open('ArqTeste.txt', 'r')
-arquivo_saida = open('ArqSaida.txt', 'w')
+arquivo_teste = open(sys.argv[1], 'r')
+arquivo_saida = open(sys.argv[2], 'w')
 
 index = 0
 numero_de_automatos = 0
@@ -58,8 +58,6 @@ def verificar_cadeira(cadeia, automato, estado_atual):
 
     if len(cadeia) == 0:
         if str(estado_atual) in automato['estados_de_aceitacao']:
-            print('acabou e deu bom\n\n')
-            return;
             aux = open('verificacao_automato.txt', 'a')
             aux.write('1 ')
             aux.close()
@@ -71,9 +69,6 @@ def verificar_cadeira(cadeia, automato, estado_atual):
                     automato_travado = False
                     cadeia_consumida = cadeia.copy()
                     verificar_cadeira(cadeia_consumida, automato, transicao[2])
-            aux = open('verificacao_automato.txt', 'a')
-            aux.write('0 ')
-            aux.close()
 
         return
     else:
@@ -101,6 +96,13 @@ for i in range(numero_de_automatos):
 	for cadeia in automato['cadeias']:
 		verificar_cadeira(cadeia, automato, automato['index_do_estado_inicial'])
 		aux = open('verificacao_automato.txt', 'r')
+
+		conteudo = aux.readline()
+		aux.close()
+		aux = open('verificacao_automato.txt', 'r')
+
+		if not bool(conteudo):
+			string_de_saida += '0 '
 		for linha in aux:
 			vetor = linha.split()
 			if('1' in vetor):
@@ -115,17 +117,9 @@ for i in range(numero_de_automatos):
 
 	string_de_saida += '\n'
 
-print(string_de_saida)
-
-
-
-'''
-resposta = open('verificacao_automato.txt', 'r')
-for linha in resposta:
-	print(linha)
-'''
-
+arquivo_saida.write(string_de_saida)
 arquivo_teste.close()
+
 
 '''
 [
